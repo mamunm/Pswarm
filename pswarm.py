@@ -59,7 +59,7 @@ class Particle:
                                   self.val_best)]
         
     def get_fun_val(self, func, strategy='minimize'):
-        '''Evaluate the error at the present position'''
+        '''Evaluate the function at the present position'''
         self.value = func(self.position)
         if strategy == 'maximize':
             self.value = -self.value
@@ -70,11 +70,15 @@ class Particle:
             self.val_best = self.value  
 
     def update_velocity(self, 
-                        swarm_param=SwarmParam.make(),
+                        swarm_param=None,
                         global_pos_best=None, 
                         local_pos_best=None):
         r = np.random.random(size=3)
         
+        if swarm_param is None:
+            swarm_param = SwarmParam.make()
+            warnings.warn('No swarm parameter was passed. '
+                          'Default swarm parameters will be used.')
         if local_pos_best is not None:
             v_local = swarm_param.local * \
                       r[2] * (local_pos_best - self.position)
